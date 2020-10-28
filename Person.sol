@@ -1,5 +1,8 @@
 pragma solidity 0.5.12;
 
+// require() checks for errors in input
+// assert() checks for errors in invariants (errors in code/logic)
+
 contract HelloWorld {
     
     struct Person {
@@ -37,6 +40,12 @@ contract HelloWorld {
         insertPerson(newPerson);
         creators.push(msg.sender);
         
+        // the following assert is checking the invariant:      people[msg.sender] == newPerson
+        // msg.sender hash should equal newPerson hash
+        assert( // hash of person added into people mapping                                                                                             // person we created in createPerson function
+            keccak256(abi.encodePacked(people[msg.sender].name, people[msg.sender].age, people[msg.sender].height, people[msg.sender].isSenior)) == keccak256(abi.encodePacked(newPerson.name, newPerson.age, newPerson.height, newPerson.isSenior))
+        );
+
     }
     
     function insertPerson(Person memory newPerson) private {
@@ -56,6 +65,9 @@ contract HelloWorld {
     function deletePerson(address creator) public {
         require(msg.sender == owner);
         delete people[creator];
+        
+        // invariant: after we delete person, age should be 0       people[creator].age == 0
+        assert(people[creator].age == 0);
     }
     
     // view means its a get function (doesnt modify contract in any way, just returns a variable)
