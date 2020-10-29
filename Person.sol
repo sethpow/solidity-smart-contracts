@@ -106,4 +106,13 @@ contract HelloWorld {
         return creators[index];
     }
     
+    function withdrawAll() public onlyOwner returns(uint) {
+        uint toTransfer = balance;
+        balance = 0;    // goes before transfer in order to ensure a safe transaction
+        
+        // transfer will revert automatically; .send will not but you can create custom errors and manually revert
+        msg.sender.transfer(toTransfer);
+        return toTransfer;
+    }
+    
 }
