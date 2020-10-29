@@ -14,6 +14,11 @@ contract HelloWorld {
     
     address public owner;
     
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _; // continue execution if above is true
+    }
+    
     // runs whenever contract is created
     constructor() public {
         owner = msg.sender;
@@ -62,8 +67,7 @@ contract HelloWorld {
         return (people[creator].name, people[creator].age, people[creator].height, people[creator].isSenior);
     }
     
-    function deletePerson(address creator) public {
-        require(msg.sender == owner);
+    function deletePerson(address creator) public onlyOwner {
         delete people[creator];
         
         // invariant: after we delete person, age should be 0       people[creator].age == 0
@@ -71,8 +75,7 @@ contract HelloWorld {
     }
     
     // view means its a get function (doesnt modify contract in any way, just returns a variable)
-    function getCreator(uint index) public view returns(address) {
-        require(msg.sender == owner, "Caller must be the owner.");
+    function getCreator(uint index) public view onlyOwner returns(address) {
         return creators[index];
     }
     
