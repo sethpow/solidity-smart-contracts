@@ -18,6 +18,9 @@ contract HelloWorld {
         bool isSenior;
     }
     
+    event personCreated(string name, bool isSenior);    // do not need to assign to memory in events
+    event personDeleted(string name, bool isSenior, address deletedBy);
+    
     address public owner;
     
     modifier onlyOwner() {
@@ -43,6 +46,7 @@ contract HelloWorld {
         newPerson.name = name;
         newPerson.age = age;
         newPerson.height = height;
+        
         if(age >= 65){
             newPerson.isSenior = true;
         } else {
@@ -56,7 +60,7 @@ contract HelloWorld {
         assert( // hash of person added into people mapping                                                                                             // person we created in createPerson function
             keccak256(abi.encodePacked(people[msg.sender].name, people[msg.sender].age, people[msg.sender].height, people[msg.sender].isSenior)) == keccak256(abi.encodePacked(newPerson.name, newPerson.age, newPerson.height, newPerson.isSenior))
         );
-
+        emit personCreated(newPerson.name, newPerson.isSenior); // emit - sends events
     }
     
     function insertPerson(Person memory newPerson) private {
@@ -74,10 +78,16 @@ contract HelloWorld {
     }
     
     function deletePerson(address creator) public onlyOwner {
+        // pulling out name and isSenior data before it is deleted
+        string memory name = people[creator].name;
+        bool isSenior = people[creator].isSenior;
+        
         delete people[creator];
         
         // invariant: after we delete person, age should be 0       people[creator].age == 0
         assert(people[creator].age == 0);
+        
+        emit personDeleted(name, isSenior, msg.sender);
     }
     
     // view means its a get function (doesnt modify contract in any way, just returns a variable)
