@@ -22,10 +22,16 @@ contract HelloWorld {
     event personDeleted(string name, bool isSenior, address deletedBy);
     
     address public owner;
+    uint public balance;
     
     modifier onlyOwner() {
         require(msg.sender == owner);
         _; // continue execution if above is true
+    }
+    
+    modifier costs(uint cost) {
+        require(msg.value >= cost);     //msg.value - keeps track of value being sent to function               // check if payment is >= a value we can set; if not, function wont be executed
+        _;
     }
     
     // runs whenever contract is created
@@ -39,8 +45,13 @@ contract HelloWorld {
     
     address[] private creators;
     
-    function createPerson(string memory name, uint age, uint height) public {
+    function createPerson(string memory name, uint age, uint height) public payable costs(1 ether) {   // payable - function can receive money/Ether
         require(age < 150, "Age needs to be below 150");
+
+        // tracks smart contracts balance
+        // address(this).balance;
+        balance += msg.value;
+        
         //this creates a Person
         Person memory newPerson;    // struct;
         newPerson.name = name;
