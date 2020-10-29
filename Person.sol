@@ -3,6 +3,12 @@ pragma solidity 0.5.12;
 // require() checks for errors in input
 // assert() checks for errors in invariants (errors in code/logic)
 
+/* Data Locations - where solidity saves data
+* storage - anything saved permanently; age of contract (state variables, mappings, etc...)
+* memory - only saved during function execution; deleted after function ends (need to explicitly assign string, arrays, and structs to memory; function params default to memory)
+* stack - made to hold local variables of value types (int, bool, etc..)
+*/
+
 contract HelloWorld {
     
     struct Person {
@@ -33,7 +39,7 @@ contract HelloWorld {
     function createPerson(string memory name, uint age, uint height) public {
         require(age < 150, "Age needs to be below 150");
         //this creates a Person
-        Person memory newPerson;
+        Person memory newPerson;    // struct;
         newPerson.name = name;
         newPerson.age = age;
         newPerson.height = height;
