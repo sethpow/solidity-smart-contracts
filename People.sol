@@ -1,4 +1,5 @@
 import "./Ownable.sol";
+import "./Destroyable.sol";
 pragma solidity 0.5.12;
 
 // require() checks for errors in input
@@ -10,7 +11,7 @@ pragma solidity 0.5.12;
 * stack - made to hold local variables of value types (int, bool, etc..)
 */
 
-contract People is Ownable {
+contract People is Ownable, Destroyable {
     
     struct Person {
         string name;
