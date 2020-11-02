@@ -91,7 +91,7 @@ contract People is Ownable, Destroyable {
         // invariant: after we delete person, age should be 0       people[creator].age == 0
         assert(people[creator].age == 0);
         
-        emit personDeleted(name, isSenior, msg.sender);
+        emit personDeleted(name, isSenior, owner);
     }
     
     // view means its a get function (doesnt modify contract in any way, just returns a variable)
