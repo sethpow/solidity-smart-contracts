@@ -1,3 +1,4 @@
+import "./Ownable.sol";
 pragma solidity 0.5.12;
 
 // require() checks for errors in input
@@ -9,7 +10,7 @@ pragma solidity 0.5.12;
 * stack - made to hold local variables of value types (int, bool, etc..)
 */
 
-contract HelloWorld {
+contract People is Ownable {
     
     struct Person {
         string name;
@@ -21,23 +22,14 @@ contract HelloWorld {
     event personCreated(string name, bool isSenior);    // do not need to assign to memory in events
     event personDeleted(string name, bool isSenior, address deletedBy);
     
-    address public owner;
     uint public balance;
     
-    modifier onlyOwner() {
-        require(msg.sender == owner);
-        _; // continue execution if above is true
-    }
     
     modifier costs(uint cost) {
         require(msg.value >= cost);     //msg.value - keeps track of value being sent to function               // check if payment is >= a value we can set; if not, function wont be executed
         _;
     }
     
-    // runs whenever contract is created
-    constructor() public {
-        owner = msg.sender;
-    }
     
     // key value pair; address is key (data type) we search for to return the person (value)
     // people is name of mapping
